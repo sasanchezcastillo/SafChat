@@ -20,11 +20,14 @@ import android.widget.Toast;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.io.IOException;
+import java.util.List;
 
 public class CameraFragment extends Fragment implements SurfaceHolder.Callback {
 
     // Creates camera accesibility
     Camera camera;
+    Camera.PictureCallback jpegCallback;
+
     SurfaceView mSurfaceView;
     SurfaceHolder mSurfaceHolder;
 
@@ -65,7 +68,32 @@ public class CameraFragment extends Fragment implements SurfaceHolder.Callback {
             }
         });
 
+        // On click listener for capturing photos
+        Button mTakePhoto = view.findViewById(R.id.takePhoto);
+        mTakePhoto.setOnClickListener(new View.OnClickListener(){
+            public void onClick(View view){
+                takePhoto();
+            }
+
+        });
+
+
+        jpegCallback = new Camera.PictureCallback() {
+            @Override
+            public void onPictureTaken(byte[] bytes, Camera camera) {
+                //Sends taken photo data and sends it to the ShowPhotoActivity
+                Intent intent = new Intent(getActivity(), ShowPhotoActivity.class);
+                intent.putExtra("capture",bytes);
+
+            }
+        };
+
         return view;
+    }
+
+    //Take photo method
+    private void takePhoto() {
+        camera.takePicture(null,null,jpegCallback);
     }
 
 
@@ -80,6 +108,8 @@ public class CameraFragment extends Fragment implements SurfaceHolder.Callback {
         camera.setDisplayOrientation(90); //Vertical camera setting
         parameters.setPreviewFrameRate(30); //Refresh rate of preview
         parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE); //Focus using vidoe
+
+
         camera.setParameters(parameters);
 
         try {

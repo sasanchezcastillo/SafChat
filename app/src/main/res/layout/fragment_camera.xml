@@ -14,4 +14,11 @@
         android:layout_height="wrap_content"
         android:text="Logout"
         android:id="@+id/logout"/>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Capture"
+        android:id="@+id/takePhoto"
+        android:layout_gravity="bottom"/>
 </FrameLayout>
